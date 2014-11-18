@@ -1,0 +1,30 @@
+{
+  "name": "esdr-csv-uploader",
+  "version": "1.0.0",
+  "description": "Simple Node.js app for processing a CSV file and uploading it to an ESDR feed.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/chrisbartley/esdr-csv-uploader.git"
+  },
+  "keywords": [
+    "esdr",
+    "csv",
+    "upload"
+  ],
+  "author": "Chris Bartley <bartley@cmu.edu>",
+  "license": "GPL-2.0",
+  "bugs": {
+    "url": "https://github.com/chrisbartley/esdr-csv-uploader/issues"
+  },
+  "homepage": "https://github.com/chrisbartley/esdr-csv-uploader",
+  "dependencies": {
+    "log4js": "^0.6.21",
+    "nconf": "^0.6.9",
+    "nimble": "0.0.2",
+    "superagent": "^0.21.0"
+  }
+}

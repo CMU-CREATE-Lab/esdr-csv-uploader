@@ -1,0 +1,24 @@
+{
+   "replaceConsole" : true,
+   "appenders" : [
+      {
+         "type" : "console",
+         "layout" : {
+            "type" : "pattern",
+            "pattern" : "%d{ABSOLUTE} [%[%p%]] %c - %m"
+         }
+      },
+      {
+         "type" : "file",
+         "filename" : "./logs/esdr-csv-uploader.log",
+         "maxLogSize" : 1000000,
+         "backups" : 5,
+         "layout" : {
+            "type" : "basic"
+         }
+      }
+   ],
+   "levels" : {
+      "[all]" : "DEBUG"
+   }
+}
