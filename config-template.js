@@ -50,7 +50,7 @@ config.argv()
                          }
                       }
                    },
-                   
+
                    "esdr" : {
                       // Root API URL for ESDR, typically https://esdr.cmucreatelab.org/api/v1
                       "apiRootUrl" : "https://esdr.cmucreatelab.org/api/v1",
@@ -86,6 +86,31 @@ config.argv()
 
                       // Amount of time (in millis) to wait between upload batches when an error occurs.
                       "errorUploadIntervalMillis" : 5 * 60 * 1000 // five minutes
+                   },
+
+                   "log4js" : {
+                      "replaceConsole" : true,
+                      "appenders" : [
+                         {
+                            "type" : "console",
+                            "layout" : {
+                               "type" : "pattern",
+                               "pattern" : "%d{ABSOLUTE} [%[%p%]] %c - %m"
+                            }
+                         },
+                         {
+                            "type" : "file",
+                            "filename" : "./logs/esdr-csv-uploader.log",
+                            "maxLogSize" : 1000000,
+                            "backups" : 5,
+                            "layout" : {
+                               "type" : "basic"
+                            }
+                         }
+                      ],
+                      "levels" : {
+                         "[all]" : "DEBUG"
+                      }
                    }
                 });
 

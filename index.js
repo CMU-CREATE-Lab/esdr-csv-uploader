@@ -1,9 +1,10 @@
-var log4js = require('log4js');
-log4js.configure('log4js-config.json');
-var log = log4js.getLogger("esdr-csv-uploader");
-
 var configFilePath = require('path').resolve(process.argv[2] || './config.js');
 var config = require(configFilePath);
+
+var log4js = require('log4js');
+log4js.configure(config.get("log4js"));
+var log = log4js.getLogger("esdr-csv-uploader");
+
 var superagent = require('superagent');
 var flow = require('nimble');
 var RandomAccessCsv = require('./lib/RandomAccessCsv');
