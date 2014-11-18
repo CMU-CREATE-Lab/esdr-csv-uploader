@@ -22,6 +22,15 @@ var NUMERIC_COMPARATOR = function(a, b) {
 // pick out the index of the timestamp field
 var timestampIndexInCsv = config.get("csv:data:timestampIndex");
 
+// get the timestamp parser function
+var timestampParser = config.get("csv:data:timestampParser");
+if (typeof timestampParser !== 'function') {
+   log.info("Using default timestamp parser");
+   timestampParser = function(strVal) {
+      return parseFloat(strVal);
+   };
+}
+
 /**
  * Attempts to find the given needle in the given haystack using the given comparator.  If found, it returns the
  * index of the element; otherwise it returns a negative number which is the complement of the insertion index.
@@ -115,8 +124,8 @@ var csvToJson = (function() {
                // split the line into fields
                var fields = line.trim().split(FIELD_DELIMITER);
 
-               // pick out the timestamp field, and convert to float
-               var timestamp = parseFloat(fields[timestampIndexInCsv]);
+               // pick out the timestamp field, and parse it
+               var timestamp = timestampParser(fields[timestampIndexInCsv]);
 
                // build up the record we'll include in the JSON
                var record = [timestamp];
@@ -211,10 +220,8 @@ var run = function() {
                            var firstRecord = csv.getFirstRecord();
                            var lastRecord = csv.getLastRecord();
                            if (firstRecord && lastRecord) {
-                              // TODO: don't assume timestamp is the first field--get that from the config
-                              // TODO: do the type conversion elsewhere
-                              var firstRecordTimestamp = parseFloat(firstRecord.line.split(FIELD_DELIMITER)[0]);
-                              var lastRecordTimestamp = parseFloat(lastRecord.line.split(FIELD_DELIMITER)[0]);
+                              var firstRecordTimestamp = timestampParser(firstRecord.line.split(FIELD_DELIMITER)[timestampIndexInCsv]);
+                              var lastRecordTimestamp = timestampParser(lastRecord.line.split(FIELD_DELIMITER)[timestampIndexInCsv]);
 
                               if (maxTimeSecs < firstRecordTimestamp) {
                                  log.debug("This entire file is NEWER than what is in ESDR!");
@@ -234,8 +241,7 @@ var run = function() {
                                                                   var lineObject = csv.getLineContainingBytePosition(index);
                                                                   var line = lineObject['line'].trim();
                                                                   var fields = line.split(FIELD_DELIMITER);
-                                                                  log.trace("found line: " + line + " --> [" + fields[0] + "] at pos " + index + " (" + lineObject.startPos + "," + lineObject.endPos + ")");
-                                                                  return fields[0]; // TODO: don't hardcode the index of the timestamp
+                                                                  return timestampParser(fields[timestampIndexInCsv]);
                                                                }
                                                             },
                                                             maxTimeSecs,
@@ -313,7 +319,7 @@ var run = function() {
                      }
                   }
                ],
-               
+
          // handle outcome
                function() {
                   // TODO: deal with possible error!

@@ -11,33 +11,40 @@ config.argv()
                       "hasHeaderRow" : true,
 
                       "data" : {
-                         // This specifies which field in the CSV contains the timestamp.  Timestamp must be UNIX time
-                         // in seconds.  Decimal values are OK.
+                         // This specifies which field in the CSV contains the timestamp.  ESDR assumes the timestamp is
+                         // a UNIX time double value, in seconds.
                          "timestampIndex" : 0,
+
+                         // The function used to parse the timestamp and convert. If not defined, the string value in
+                         // the CSV is simply converted to a float using parseFloat.
+                         "timestampParser" : function(strVal){
+                            return parseFloat(strVal);
+                         },
 
                          // The delimiter character between fields in the CSV
                          "fieldDelimiter" : ",",
 
                          // Specify which fields to pick out of the CSV, and what their name should be when uploading
-                         // to ESDR.  Specifying the "index" is required, but parser is optional. If parser is undefined
-                         // or not a function, the field is simply treated as a string.
+                         // to ESDR (the uploader doesn't care what the field names are in the header row, if the header
+                         // row exists).  Specifying the "index" is required, but parser is optional. If parser is
+                         // undefined or not a function, the field is simply treated as a string.
                          "fields" : {
                             "humidity" : {
                                "index" : 1,
-                               "parser" : function(val) {
-                                  return parseInt(val, 10);
+                               "parser" : function(strVal) {
+                                  return parseInt(strVal, 10);
                                }
                             },
                             "raw_particles" : {
                                "index" : 2,
-                               "parser" : function(val) {
-                                  return parseInt(val, 10);
+                               "parser" : function(strVal) {
+                                  return parseInt(strVal, 10);
                                }
                             },
                             "particle_concentration" : {
                                "index" : 3,
-                               "parser" : function(val) {
-                                  return parseFloat(val);
+                               "parser" : function(strVal) {
+                                  return parseFloat(strVal);
                                }
                             }
                          }
