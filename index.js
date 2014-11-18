@@ -280,7 +280,7 @@ var run = function() {
                   // now that we know the starting line number, read lines from the CSV
                   function(done) {
                      if (isUploadRequired && hasNoError()) {
-                        csvLinesToUpload = csv.readLines(startingBytePos, config.get("maxRecordsPerUpload"));
+                        csvLinesToUpload = csv.readLines(startingBytePos, config.get("upload:maxRecords"));
                      }
                      done();
                   },
@@ -308,8 +308,10 @@ var run = function() {
                                          error = err;
                                       }
                                       else {
-                                         // TODO: need to check the returned status!
-                                         //log.trace(JSON.stringify(res.body, null, 3));
+                                         if (res.status != 200) {
+                                            var message = (res.body && res.body.message) ? res.body.message : "unexpected error";
+                                            error = new Error("Received unexpected HTTP status code " + res.status + ": " + message);
+                                         }
                                       }
                                       done();
                                    });
@@ -322,14 +324,34 @@ var run = function() {
 
          // handle outcome
                function() {
-                  // TODO: deal with possible error!
                   if (csv) {
                      csv.close();
                   }
-                  var linesUploaded = csvLinesToUpload ? csvLinesToUpload.length : 0;
-                  log.debug("All done--uploaded [" + linesUploaded + "] lines");
 
-                  setTimeout(run, linesUploaded > 1 ? 1 : 1000);     // TODO: get these times from the config
+                  if (hasNoError()) {
+                     var linesUploaded = csvLinesToUpload ? csvLinesToUpload.length : 0;
+                     log.debug("All done--uploaded [" + linesUploaded + "] lines");
+                  }
+                  else {
+                     log.error("Error while processing the upload batch: " + error);
+                  }
+
+                  if (config.get("upload:loop")) {
+                     var delay;
+                     if (hasNoError()) {
+                        var uploadIntervalRecordCountThreshold = config.get("upload:uploadIntervalRecordCountThreshold");
+                        var fastUploadIntervalMillis = config.get("upload:fastUploadIntervalMillis");
+                        var normalUploadIntervalMillis = config.get("upload:normalUploadIntervalMillis");
+
+                        delay = linesUploaded >= uploadIntervalRecordCountThreshold ?
+                                    fastUploadIntervalMillis :
+                                    normalUploadIntervalMillis;
+                     } else {
+                        delay = config.get("upload:errorUploadIntervalMillis")
+                     }
+
+                     setTimeout(run, delay);
+                  }
                }
    );
 };

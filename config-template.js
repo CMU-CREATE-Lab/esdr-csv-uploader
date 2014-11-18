@@ -17,7 +17,7 @@ config.argv()
 
                          // The function used to parse the timestamp and convert. If not defined, the string value in
                          // the CSV is simply converted to a float using parseFloat.
-                         "timestampParser" : function(strVal){
+                         "timestampParser" : function(strVal) {
                             return parseFloat(strVal);
                          },
 
@@ -58,8 +58,34 @@ config.argv()
                       "feedId" : "012345678901234567890123456789012345678901234567890123456789abcd"
                    },
 
-                   // number of records to read from the CSV, convert, and upload to ESDR with each iteration
-                   "maxRecordsPerUpload" : 5000
+                   "upload" : {
+                      // number of records to read from the CSV, convert, and upload to ESDR with each iteration
+                      "maxRecords" : 5000,
+
+                      // Whether to continuously process the CSV for uploads.  If false, the uploader will only upload a
+                      // single batch (and thus the values below are ignored).
+                      "loop" : true,
+
+                      // The minimum number of records required to be included in an upload in order for the uploader
+                      // to go from "fast" upload interval to "normal".
+                      "uploadIntervalRecordCountThreshold" : 2,
+
+                      // Amount of time (in millis) to wait between upload batches when at least
+                      // uploadIntervalRecordCountThreshold records where uploaded.  Setting this to a small value
+                      // allows the uploader to process a large backlog of records very quickly.  Once fewer than
+                      // uploadIntervalRecordCountThreshold records are uploaded in a batch, the uploader will switch
+                      // to "normal" mode.
+                      "fastUploadIntervalMillis" : 1,
+
+                      // Amount of time (in millis) to wait between upload batches when fewer than
+                      // uploadIntervalRecordCountThreshold records where uploaded.  If you're running the uploader
+                      // simultaneously with a downloader (i.e. both working on the same CSV file), then there's no
+                      // point in setting this to a value smaller than the sample acquisition rate of the device.
+                      "normalUploadIntervalMillis" : 1000,
+
+                      // Amount of time (in millis) to wait between upload batches when an error occurs.
+                      "errorUploadIntervalMillis" : 5 * 60 * 1000 // five minutes
+                   }
                 });
 
 module.exports = config;
