@@ -72,7 +72,7 @@ var binarySearch = function(haystack, needle, comparator, initialMin, initialMax
 
 var getTimestampOfLatestData = function(callback) {
    superagent
-         .get(config.get("esdr:apiRootUrl") + "/feeds?fields=maxTimeSecs")
+         .get(config.get("esdr:apiRootUrl") + "/feed?fields=maxTimeSecs")
          .set({
                  FeedApiKey : config.get("esdr:feedId")
               })
@@ -84,9 +84,8 @@ var getTimestampOfLatestData = function(callback) {
                  if (res) {
                     if (res.status == 200) {
                        if (res.body) {
-                          log.debug(JSON.stringify(res.body, null, 3));
-                          if (res.body.data && res.body.data.rows && res.body.data.rows.length > 0) {
-                             return callback(null, res.body.data.rows[0]['maxTimeSecs'])
+                          if (res.body.data) {
+                             return callback(null, res.body.data['maxTimeSecs'])
                           }
                           return callback(new Error("Missing response data!"));
                        }
