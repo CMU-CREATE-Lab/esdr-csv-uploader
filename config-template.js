@@ -56,7 +56,7 @@ config.argv()
                       "apiRootUrl" : "https://esdr.cmucreatelab.org/api/v1",
 
                       // the read-write Feed API Key to use for uploads
-                      "feedId" : "012345678901234567890123456789012345678901234567890123456789abcd"
+                      "feedApiKey" : "012345678901234567890123456789012345678901234567890123456789abcd"
                    },
 
                    "upload" : {
@@ -82,10 +82,10 @@ config.argv()
                       // uploadIntervalRecordCountThreshold records where uploaded.  If you're running the uploader
                       // simultaneously with a downloader (i.e. both working on the same CSV file), then there's no
                       // point in setting this to a value smaller than the sample acquisition rate of the device.
-                      "normalUploadIntervalMillis" : 1000,
+                      "normalUploadIntervalMillis" : 60 * 1000,      // one minute
 
                       // Amount of time (in millis) to wait between upload batches when an error occurs.
-                      "errorUploadIntervalMillis" : 5 * 60 * 1000 // five minutes
+                      "errorUploadIntervalMillis" : 5 * 60 * 1000    // five minutes
                    },
 
                    "log4js" : {

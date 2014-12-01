@@ -74,7 +74,7 @@ var getTimestampOfLatestData = function(callback) {
    superagent
          .get(config.get("esdr:apiRootUrl") + "/feed?fields=maxTimeSecs")
          .set({
-                 FeedApiKey : config.get("esdr:feedId")
+                 FeedApiKey : config.get("esdr:feedApiKey")
               })
          .end(function(err, res) {
                  if (err) {
@@ -301,7 +301,7 @@ var run = function() {
                         superagent
                               .put(config.get("esdr:apiRootUrl") + "/feed")
                               .set({
-                                      FeedApiKey : config.get("esdr:feedId")
+                                      FeedApiKey : config.get("esdr:feedApiKey")
                                    })
                               .send(jsonToUpload)
                               .end(function(err, res) {
