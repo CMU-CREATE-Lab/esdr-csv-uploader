@@ -22,7 +22,7 @@
   },
   "homepage": "https://github.com/chrisbartley/esdr-csv-uploader",
   "dependencies": {
-    "log4js": "^0.6.21",
+    "log4js": "^0.6.22",
     "nconf": "^0.7.1",
     "nimble": "0.0.2",
     "superagent": "^0.21.0"
