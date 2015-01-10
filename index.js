@@ -72,10 +72,7 @@ var binarySearch = function(haystack, needle, comparator, initialMin, initialMax
 
 var getTimestampOfLatestData = function(callback) {
    superagent
-         .get(config.get("esdr:apiRootUrl") + "/feed?fields=maxTimeSecs")
-         .set({
-                 FeedApiKey : config.get("esdr:feedApiKey")
-              })
+         .get(config.get("esdr:apiRootUrl") + "/feeds/" + config.get("esdr:feedApiKey") + "?fields=maxTimeSecs")
          .end(function(err, res) {
                  if (err) {
                     return callback(err);
@@ -345,9 +342,10 @@ var run = function() {
                         var normalUploadIntervalMillis = config.get("upload:normalUploadIntervalMillis");
 
                         delay = linesUploaded >= uploadIntervalRecordCountThreshold ?
-                                    fastUploadIntervalMillis :
-                                    normalUploadIntervalMillis;
-                     } else {
+                                fastUploadIntervalMillis :
+                                normalUploadIntervalMillis;
+                     }
+                     else {
                         delay = config.get("upload:errorUploadIntervalMillis")
                      }
 
