@@ -1,0 +1,5 @@
+How to list all forever processes started by the crontab scripts:
+
+$ sudo bash
+$ export PATH=/home/pi/node/node-v0.10.28-linux-arm-pi/bin:/home/pi/node/node-v0.10.28-linux-arm-pi/lib/node_modules/forever/bin:$PATH
+$ HOME=/home/pi forever -p /home/pi/.forever list
